@@ -198,7 +198,7 @@ const accentColors = {
             </ul>
           </div>
         </div>
-        <div class="configurator-panel glass-panel scroll-reveal">
+        <div class="configurator-panel sticky-panel glass-panel scroll-reveal">
           <RoomPicker />
         </div>
       </div>
@@ -255,7 +255,7 @@ const accentColors = {
       </div>
       
       <div class="grid-asym scroll-reveal" style="margin-top: 2.5rem; align-items: start;">
-        <div style="position: sticky; top: calc(var(--header-h) + 2rem);">
+        <div class="sticky-panel">
           <div class="grid-2" style="margin-bottom: 2rem;">
             {
               resolveImage(imageSlots.dining.food) && (
@@ -330,7 +330,7 @@ const accentColors = {
             </div>
           </div>
         </div>
-        <div class="configurator-panel glass-panel scroll-reveal">
+        <div class="configurator-panel sticky-panel glass-panel scroll-reveal">
           <PackageConfigurator />
         </div>
       </div>
@@ -383,9 +383,10 @@ const accentColors = {
       revealObserver.observe(el);
     });
 
-    // Parallax on hero photo
+    // Parallax on hero photo (Desktop only)
+    const isMobile = window.innerWidth < 768;
     const heroPhoto = document.querySelector('.hero__photo') as HTMLElement;
-    if (heroPhoto) {
+    if (heroPhoto && !isMobile) {
       let ticking = false;
       window.addEventListener('scroll', () => {
         if (!ticking) {
@@ -424,11 +425,34 @@ const accentColors = {
 </script>
 
 <style>
-  /* ── Reduced motion ──────────── */
+  /* ── Reduced motion & Mobile Performance ──────────── */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .scroll-reveal, .scroll-reveal-item {
+      /* Speed up animations on mobile and reduce travel distance */
+      transform: translateY(16px) scale(0.98) !important;
+      transition-duration: 0.5s !important;
+    }
+    .scroll-reveal.is-visible, .scroll-reveal-item.is-visible {
+      transform: translateY(0) scale(1) !important;
+    }
+    .hero__photo {
+      will-change: auto;
+      transform: none !important;
+    }
+  }
+
+  /* ── Desktop Sticky Panels ──────────── */
+  @media (min-width: 900px) {
+    .sticky-panel {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
     }
   }
 
@@ -734,8 +758,6 @@ const accentColors = {
   .configurator-panel {
     padding: 2rem;
     border-radius: var(--radius-xl);
-    position: sticky;
-    top: calc(var(--header-h) + 2rem);
   }
 
   /* ── Sports grid ─────────────── */
