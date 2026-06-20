@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, policies } from '../config/site';
+---
+
+<BaseLayout title="Privacy Policy" description={`Privacy policy for ${site.name} website.`}>
+  <div class="page-hero">
+    <div class="container">
+      <h1>Privacy Policy</h1>
+      <p>Last updated: {new Date().toISOString().slice(0, 10)}</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container" style="max-width: 65ch">
+      <p>{policies.privacy}</p>
+      <p>
+        Contact: <a href={`mailto:${site.email}`}>{site.email}</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

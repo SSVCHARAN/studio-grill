@@ -1,0 +1,51 @@
+---
+import { site, contact, whatsappUrl, waMessages, appLinks } from '../config/site';
+
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/#theaters', label: 'Theaters' },
+  { href: '/#sports', label: 'Sports' },
+  { href: '/#dining', label: 'Dining' },
+  { href: '/#packages', label: 'Packages' },
+  { href: '/#visit', label: 'Visit' },
+];
+
+const hasApp = Boolean(appLinks.ios || appLinks.android);
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-logo">
+      {site.name}
+    </a>
+    <nav class="site-nav" aria-label="Main">
+      {nav.map((item) => (
+        <a href={item.href} aria-current={path === item.href || path.startsWith(item.href + '/') ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <div class="header-ctas">
+      <a class="btn btn--sm btn--secondary" href={`tel:${contact.phone}`}>Call</a>
+      <a class="btn btn--sm btn--whatsapp" href={whatsappUrl(waMessages.book)} target="_blank" rel="noopener">
+        Book on WhatsApp
+      </a>
+    </div>
+    <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav">
+      Menu
+    </button>
+  </div>
+  <nav id="mobile-nav" class="mobile-nav container" aria-label="Mobile">
+    {nav.map((item) => (
+      <a href={item.href}>{item.label}</a>
+    ))}
+    <a class="btn btn--whatsapp" href={whatsappUrl(waMessages.book)} target="_blank" rel="noopener">Book on WhatsApp</a>
+    <a class="btn btn--secondary" href={`tel:${contact.phone}`}>Call {contact.phoneDisplay}</a>
+    {hasApp && (
+      <div class="app-badges">
+        {appLinks.android && <a class="app-badge app-badge--live" href={appLinks.android}>Google Play</a>}
+        {appLinks.ios && <a class="app-badge app-badge--live" href={appLinks.ios}>App Store</a>}
+      </div>
+    )}
+  </nav>
+</header>

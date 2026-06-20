@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { policies } from '../config/site';
+---
+
+<BaseLayout title="Terms & Refund" description="Terms of service and refund policy for Zexa Events bookings.">
+  <div class="page-hero">
+    <div class="container">
+      <h1>Terms & Refund Policy</h1>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container" style="max-width: 65ch">
+      <h2>Terms of service</h2>
+      <p>{policies.terms}</p>
+      <h2>Refunds</h2>
+      <p>{policies.refund}</p>
+      <p><a href="/faq">View FAQ</a> · <a href="/book">Contact us</a></p>
+    </div>
+  </section>
+</BaseLayout>

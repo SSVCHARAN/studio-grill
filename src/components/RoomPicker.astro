@@ -1,0 +1,44 @@
+---
+import { theaters, whatsappUrl, waMessages } from '../config/site';
+---
+
+<div id="room-picker">
+    <p class="eyebrow">Find your room</p>
+    <h2 style="font-size: 1.5rem">Which room fits your group?</h2>
+    <p>Select capacity — we'll open WhatsApp with your choice.</p>
+    <div class="form-group" style="max-width: 400px; margin-top: 1rem">
+      <label for="room-select">Zexa room</label>
+      <select id="room-select" name="room">
+        {theaters.rooms.map((r) => (
+          <option value={r.name} data-capacity={r.capacity}>
+            {r.name} ({r.capacity} guests) — {r.bestFor}
+          </option>
+        ))}
+      </select>
+    </div>
+    <div class="form-group" style="max-width: 400px">
+      <label for="guest-count">Number of guests</label>
+      <input type="number" id="guest-count" min="4" max="40" value="8" />
+    </div>
+    <a id="room-wa-link" class="btn btn--whatsapp" href={whatsappUrl(waMessages.theater)} target="_blank" rel="noopener">
+      Book selected room on WhatsApp
+    </a>
+  </div>
+
+<script>
+  const select = document.getElementById('room-select') as HTMLSelectElement;
+  const guests = document.getElementById('guest-count') as HTMLInputElement;
+  const link = document.getElementById('room-wa-link') as HTMLAnchorElement;
+  const base = '917799777428';
+
+  function updateLink() {
+    const room = select?.value ?? 'Zexa room';
+    const count = guests?.value ?? '8';
+    const msg = `Hi! I'd like to book ${room} on [date] for ${count} guests. OTT/Gaming: [please specify].`;
+    link.href = `https://wa.me/${base}?text=${encodeURIComponent(msg)}`;
+  }
+
+  select?.addEventListener('change', updateLink);
+  guests?.addEventListener('input', updateLink);
+  updateLink();
+</script>

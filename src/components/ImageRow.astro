@@ -1,0 +1,30 @@
+---
+import SiteImage from './SiteImage.astro';
+import type { ImageSlot } from '../config/images';
+import { resolveImage } from '../utils/resolveImage';
+
+interface Props {
+  slots: ImageSlot[];
+  aspect?: 'hero' | 'wide' | 'square' | 'card';
+  eager?: boolean;
+  maxWidth?: string;
+}
+
+const { slots, aspect = 'wide', eager = false, maxWidth } = Astro.props;
+const visible = slots.filter((s) => resolveImage(s));
+---
+
+{
+  visible.length > 0 && (
+    <section class="section section--tight">
+      <div
+        class:list={['container', visible.length > 1 && 'grid-2']}
+        style={maxWidth ? `max-width: ${maxWidth}; margin-inline: auto` : undefined}
+      >
+        {visible.map((slot) => (
+          <SiteImage imageSlot={slot} aspect={aspect} loading={eager && slot === visible[0] ? 'eager' : 'lazy'} />
+        ))}
+      </div>
+    </section>
+  )
+}

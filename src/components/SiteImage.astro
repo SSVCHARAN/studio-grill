@@ -1,0 +1,52 @@
+---
+import type { ImageSlot } from '../config/images';
+import { resolveImage } from '../utils/resolveImage';
+
+interface Props {
+  imageSlot: ImageSlot;
+  class?: string;
+  aspect?: 'hero' | 'wide' | 'square' | 'card';
+  loading?: 'lazy' | 'eager';
+}
+
+const { imageSlot, class: className = '', aspect = 'card', loading = 'lazy' } = Astro.props;
+const src = resolveImage(imageSlot);
+---
+
+{
+  src && (
+    <img
+      src={src}
+      alt={imageSlot.alt}
+      class={`site-image site-image--${aspect} ${className}`}
+      loading={loading}
+      decoding="async"
+    />
+  )
+}
+
+<style>
+  .site-image {
+    width: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+  }
+
+  .site-image--hero {
+    aspect-ratio: 16 / 9;
+    max-height: 70vh;
+  }
+
+  .site-image--wide {
+    aspect-ratio: 16 / 10;
+  }
+
+  .site-image--square {
+    aspect-ratio: 1;
+  }
+
+  .site-image--card {
+    aspect-ratio: 4 / 3;
+  }
+</style>

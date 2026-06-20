@@ -1,0 +1,64 @@
+---
+import { appLinks, whatsappUrl, waMessages, contact } from '../config/site';
+
+const hasApp = Boolean(appLinks.ios || appLinks.android);
+const hasDeepLink = Boolean(appLinks.deepLinkTheater || appLinks.deepLinkFood);
+---
+
+<section class="section section--tight" id="ordering">
+  <div class="container card">
+    <p class="eyebrow">Ordering channels</p>
+    <h2>How to book & order</h2>
+    {hasApp ? (
+      <>
+        <p>
+          <strong>v2 — App available.</strong> Use the Zexa Events app for theater slots and food
+          when links below are configured in <code>site.ts</code>.
+        </p>
+        <div class="app-badges">
+          {appLinks.android && (
+            <a class="btn btn--primary btn--sm" href={appLinks.android} target="_blank" rel="noopener">
+              Google Play
+            </a>
+          )}
+          {appLinks.ios && (
+            <a class="btn btn--primary btn--sm" href={appLinks.ios} target="_blank" rel="noopener">
+              App Store
+            </a>
+          )}
+          {appLinks.deepLinkTheater && (
+            <a class="btn btn--secondary btn--sm" href={appLinks.deepLinkTheater}>Open theater booking</a>
+          )}
+          {appLinks.deepLinkFood && (
+            <a class="btn btn--secondary btn--sm" href={appLinks.deepLinkFood}>Open food order</a>
+          )}
+        </div>
+      </>
+    ) : (
+      <>
+        <p>
+          <strong>v1 — WhatsApp & phone.</strong> Until app store URLs are verified, all theater
+          bookings, turf slots, celebrations, and food orders go through WhatsApp or call. This
+          matches how most guests book today.
+        </p>
+        <ul class="feature-list">
+          <li>Theaters & sports → WhatsApp with pre-filled templates on each page</li>
+          <li>Food → WhatsApp order message or call front desk</li>
+          <li>Future → set <code>appLinks.ios</code> / <code>appLinks.android</code> in config</li>
+        </ul>
+      </>
+    )}
+    <div class="btn-group" style="margin-top: 1rem">
+      <a class="btn btn--whatsapp" href={whatsappUrl(waMessages.food)} target="_blank" rel="noopener">
+        Order food on WhatsApp
+      </a>
+      <a class="btn btn--secondary" href={`tel:${contact.phone}`}>Call to order</a>
+      <a class="btn btn--secondary" href="/dining">View menu</a>
+    </div>
+    {!hasApp && (
+      <p style="margin-top: 1rem; font-size: 0.85rem">
+        Swiggy / Zomato: add delivery links in <code>site.ts</code> when listings are live.
+      </p>
+    )}
+  </div>
+</section>

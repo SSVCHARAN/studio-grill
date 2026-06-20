@@ -1,0 +1,22 @@
+---
+import { site } from '../config/site';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const { title, description, path = Astro.url.pathname } = Astro.props;
+const canonical = new URL(path, site.url).href;
+---
+
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={`${title} | ${site.name}`} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={`${title} | ${site.name}`} />
+<meta name="twitter:description" content={description} />

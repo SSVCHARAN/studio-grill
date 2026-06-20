@@ -1,0 +1,56 @@
+---
+import { site, contact, address, trust } from '../config/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'LocalBusiness',
+      '@id': `${site.url}/#business`,
+      name: site.name,
+      alternateName: site.shortName,
+      description: site.description,
+      url: site.url,
+      telephone: contact.phone,
+      email: site.email,
+      image: `${site.url}/og-image.png`,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: `${address.line1}, ${address.line2}`,
+        addressLocality: address.city,
+        addressRegion: address.state,
+        postalCode: address.pin,
+        addressCountry: 'IN',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: 17.78,
+        longitude: 83.35,
+      },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+        opens: '10:30',
+        closes: '22:30',
+      },
+      sameAs: [site.instagram],
+      priceRange: '₹₹',
+      servesCuisine: ['Indo-American', 'Indian', 'Multi-cuisine'],
+    },
+    {
+      '@type': 'Restaurant',
+      '@id': `${site.url}/#restaurant`,
+      name: `${site.name} — Dining`,
+      parentOrganization: { '@id': `${site.url}/#business` },
+      servesCuisine: ['Indo-American', 'Indian'],
+      priceRange: '₹₹',
+      amenityFeature: [
+        { '@type': 'LocationFeatureSpecification', name: 'No food coloring', value: true },
+        { '@type': 'LocationFeatureSpecification', name: 'No MSG', value: trust.noMsg },
+      ],
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

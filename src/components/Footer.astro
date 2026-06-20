@@ -1,0 +1,64 @@
+---
+import { site, contact, address, trust, appLinks } from '../config/site';
+
+const hasApp = Boolean(appLinks.ios || appLinks.android);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="/" class="site-logo">{site.name}</a>
+      <p style="margin-top: 1rem; max-width: 32ch;">{site.tagline} — {site.city}</p>
+      <p style="font-size: 0.88rem; line-height: 1.7;">
+        {address.line1}<br />
+        {address.line2}<br />
+        {address.city}, {address.state} {address.pin}
+      </p>
+      <p>
+        <strong style="color: var(--cream)">{site.hours}</strong>
+      </p>
+      <p style="font-size: 0.85rem; color: var(--gold); margin-top: 0.5rem;">{trust.trustLine}</p>
+    </div>
+    <div>
+      <h3 style="font-size: 1rem; margin-bottom: 1rem;">Explore</h3>
+      <p><a href="/#theaters">Private Theaters</a></p>
+      <p><a href="/#sports">Sports Arena</a></p>
+      <p><a href="/#dining">Dining & Menu</a></p>
+      <p><a href="/#packages">Celebrations</a></p>
+      <p><a href="/#visit">Plan Your Visit</a></p>
+    </div>
+    <div>
+      <h3 style="font-size: 1rem; margin-bottom: 1rem;">Contact</h3>
+      <p><a href={`tel:${contact.phone}`}>{contact.phoneDisplay}</a></p>
+      {contact.phoneAlt.map((p) => (
+        <p><a href={`tel:${p}`}>{p}</a></p>
+      ))}
+      <p><a href={site.instagram} target="_blank" rel="noopener">{site.instagramHandle}</a></p>
+      <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      {hasApp && (
+        <div class="app-badges">
+          {appLinks.android && (
+            <a class="app-badge app-badge--live" href={appLinks.android} target="_blank" rel="noopener">
+              Get Android App
+            </a>
+          )}
+          {appLinks.ios && (
+            <a class="app-badge app-badge--live" href={appLinks.ios} target="_blank" rel="noopener">
+              Get iOS App
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+      <span>© {year} {site.name}™. All rights reserved.</span>
+      <span style="font-size: 0.8em; color: var(--text-dim);">Designed by Zexa Designs</span>
+    </div>
+    <span>
+      <a href="/faq">FAQ</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a>
+    </span>
+  </div>
+</footer>

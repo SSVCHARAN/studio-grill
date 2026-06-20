@@ -1,0 +1,157 @@
+---
+import { packages, whatsappUrl, waMessages } from '../config/site';
+---
+
+<div id="package-config">
+    <p class="eyebrow">Build your celebration</p>
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Package configurator</h2>
+    <p style="font-size: 0.9rem; margin-bottom: 1.5rem; color: var(--text-muted);">Choose your preferred tier and add-ons to generate a custom summary.</p>
+    
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="pkg-tier">Package Tier</label>
+        <select id="pkg-tier">
+          {packages.tiers.map((t) => (
+            <option value={t.name} data-from={t.from}>
+              {t.name} — from ₹{t.from.toLocaleString('en-IN')}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="pkg-date">Preferred Date</label>
+          <input type="date" id="pkg-date" />
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="pkg-guests">Guest Count</label>
+          <input type="number" id="pkg-guests" min="4" max="40" value="15" />
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label>Premium Add-ons</label>
+        <div class="addons-grid">
+          {packages.addons.map((a) => (
+            <label class="addon-checkbox">
+              <input type="checkbox" name="addons" value={a.name} />
+              <span>{a.name}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="config-output" id="pkg-summary" role="status"></div>
+    
+    <div class="btn-group-full">
+      <a id="pkg-wa" class="btn btn--whatsapp" href={whatsappUrl(waMessages.event)} target="_blank" rel="noopener">
+        Send inquiry on WhatsApp
+      </a>
+      <button type="button" class="btn btn--secondary" id="pkg-copy">Copy details</button>
+    </div>
+</div>
+
+<style>
+  .addons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .addon-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    cursor: pointer;
+    background: var(--bg-deep);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: all 0.2s ease;
+  }
+  .addon-checkbox:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+  }
+  .addon-checkbox:has(input:checked) {
+    border-color: var(--gold);
+    background: rgba(212, 168, 83, 0.08);
+  }
+  .addon-checkbox input {
+    accent-color: var(--gold);
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .config-output {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin: 1.5rem 0;
+    line-height: 1.6;
+    border-left: 3px solid var(--gold);
+  }
+
+  .btn-group-full {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .btn-group-full .btn {
+    width: 100%;
+    justify-content: center;
+  }
+</style>
+
+<script>
+  const tier = document.getElementById('pkg-tier') as HTMLSelectElement;
+  const guests = document.getElementById('pkg-guests') as HTMLInputElement;
+  const date = document.getElementById('pkg-date') as HTMLInputElement;
+  const summary = document.getElementById('pkg-summary');
+  const wa = document.getElementById('pkg-wa') as HTMLAnchorElement;
+  const copyBtn = document.getElementById('pkg-copy');
+  const base = '917799777428';
+
+  function getAddons(): string {
+    const checked = document.querySelectorAll('input[name="addons"]:checked');
+    const vals = Array.from(checked).map((cb) => (cb as HTMLInputElement).value);
+    return vals.length ? vals.join(', ') : 'None';
+  }
+
+  function buildText(): string {
+    const t = tier?.selectedOptions[0]?.value ?? 'Pearl';
+    const g = guests?.value ?? '15';
+    const d = date?.value || '[date]';
+    const a = getAddons();
+    return `Hi! I'm planning a celebration at Zexa Events.\n\nPackage: ${t}\nDate: ${d}\nGuests: ${g}\nAdd-ons: ${a}`;
+  }
+
+  function refresh() {
+    const text = buildText();
+    if (summary) summary.innerText = text;
+    wa.href = `https://wa.me/${base}?text=${encodeURIComponent(text)}`;
+  }
+
+  [tier, guests, date].forEach((el) => el?.addEventListener('change', refresh));
+  guests?.addEventListener('input', refresh);
+  document.querySelectorAll('input[name="addons"]').forEach(cb => cb.addEventListener('change', refresh));
+  
+  refresh();
+
+  copyBtn?.addEventListener('click', async () => {
+    await navigator.clipboard.writeText(buildText());
+    copyBtn.textContent = 'Copied to clipboard!';
+    setTimeout(() => {
+      copyBtn.textContent = 'Copy details';
+    }, 2000);
+  });
+</script>
